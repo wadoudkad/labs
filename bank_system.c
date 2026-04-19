@@ -5,11 +5,17 @@
 #include <ctype.h>
 
 typedef struct {
+    int day, month, year;
+} Date;
+
+typedef struct {
     int id;
     char name[30];
+    char address[50];
     char type; // P: Personal, M: Minor, C: Commercial
     int balance;
     bool isBlocked;
+    Date dob;
 } Account;
 
 Account accounts[100];
@@ -33,15 +39,36 @@ void addAccount() {
     scanf("%d", &a.id);
     printf("Enter Customer Name: "); 
     scanf("%s", a.name);
+    printf("Enter Home Adress:");
+    scanf("%s",a.address);
+    printf("Enter Date of birth:(dd mm yyyy)");
+    scanf("%d %d %d",&a.dob.day,&a.dob.month,&a.dob.year);
     printf("Enter Type (P: Personal, M: Minor, C: Commercial): "); 
     scanf(" %c", &a.type);
     
     a.type = toupper(a.type);
     
+    int age = 2026 - a.dob.year;
+
+    if (a.type == 'P' && age < 18) {
+        printf("[!] Error: Individual account must be at least 18 years old.\n");
+        return;
+    } 
+    else if (a.type == 'M') {
+        int hasGuardian;
+        printf("Does the guardian have an account? (1: Yes, 0: No): ");
+        scanf("%d", &hasGuardian);
+        if (!hasGuardian) {
+            printf("[!] Error: Minor account requires a guardian with an active account.\n");
+            return;
+        }
+    }
+
     a.balance = 0;
     a.isBlocked = false;
     
     accounts[accountCount++] = a;
+    saveToFile();
     printf("[+] Account created successfully!\n");
 }
 
@@ -102,7 +129,8 @@ void saveToFile() {
     for (int i = 0; i < accountCount; i++) {
         fprintf(file, "%d %s %c %d %d\n", 
                 accounts[i].id, accounts[i].name, accounts[i].type, 
-                accounts[i].balance, accounts[i].isBlocked);
+                accounts[i].balance, accounts[i].isBlocked, 
+                accounts[i].dob.day, accounts[i].dob.month, accounts[i].dob.year);
     }
     fclose(file);
 }
@@ -112,12 +140,15 @@ void loadFromFile() {
         printf("[!] No previous data found. Starting fresh.\n");
         return;
     }
-    while (fscanf(file, "%d %s %c %d %d", 
+    while (fscanf(file, "%d %s %c %d %d %d %d %d", 
                   &accounts[accountCount].id, 
                   accounts[accountCount].name, 
                   &accounts[accountCount].type, 
                   &accounts[accountCount].balance, 
-                  (int *)&accounts[accountCount].isBlocked) != EOF) {
+                  (int *)&accounts[accountCount].isBlocked,
+                  &accounts[accountCount].dob.day,
+                  &accounts[accountCount].dob.month,
+                  &accounts[accountCount].dob.year) != EOF) {
         accountCount++;
     }
     fclose(file);
