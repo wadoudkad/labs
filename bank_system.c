@@ -68,22 +68,6 @@ void searchAccount() {
     }
     if (!found) printf("[!] Customer not found.\n");
 }
-
-// 3. Update (Modify Name)
-void updateAccount() {
-    int id;
-    printf("\nEnter Account ID to update: "); 
-    scanf("%d", &id);
-    int idx = findIndex(id);
-    if (idx != -1) {
-        printf("Current Name: %s. Enter New Name: ", accounts[idx].name);
-        scanf("%s", accounts[idx].name);
-        printf("[+] Update successful!\n");
-    } else {
-        printf("[!] Account ID not found.\n");
-    }
-}
-
 // 4. Delete (Remove and Shift)
 void deleteAccount() {
     int id;
@@ -284,7 +268,7 @@ int main() {
             case 4: deleteAccount(); break;
             case 5: displayAll(); break;
             case 6: deposit(); saveToFile(); break; 
-            case 7: withdraw(); saveToFile(); break;
+            case 7: withdraw(); saveToFile(); break; 
             case 8: updateAccount(); saveToFile(); break; 
             case 9: transferMoney(); saveToFile(); break; 
             case 10: accountInquiry(); break;
