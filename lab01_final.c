@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-// --- Data Structures ---
 typedef struct {
     int id;
     char name[30];
@@ -16,7 +15,6 @@ typedef struct {
 Account accounts[100];
 int accountCount = 0;
 
-// Helper function to find account index by ID
 int findIndex(int id) {
     for (int i = 0; i < accountCount; i++) {
         if (accounts[i].id == id) return i;
@@ -39,7 +37,6 @@ void addAccount() {
     printf("Enter Type (P: Personal, M: Minor, C: Commercial): "); 
     scanf(" %c", &a.type);
     
-    // Convert to uppercase for case-insensitivity
     a.type = toupper(a.type);
     
     a.balance = 0;
@@ -57,7 +54,7 @@ void searchAccount() {
     bool found = false;
 
     for (int i = 0; i < accountCount; i++) {
-        // strcasecmp ignores upper/lower case differences
+    
         if (strcasecmp(accounts[i].name, searchName) == 0) {
             printf("\nAccount Found:\n");
             printf("ID: %d | Name: %s | Type: %c | Balance: %d | Status: %s\n", 
@@ -91,7 +88,7 @@ void deleteAccount() {
     scanf("%d", &id);
     int idx = findIndex(id);
     if (idx != -1) {
-        // Shifting logic to maintain array continuity
+        
         for (int i = idx; i < accountCount - 1; i++) {
             accounts[i] = accounts[i+1];
         }

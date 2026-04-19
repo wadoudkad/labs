@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// هيكل التاريخ
 typedef struct {
     int day, month, year;
 } Date;
@@ -34,7 +33,6 @@ void createAccount() {
     if (newAcc.type == 'P') {
         printf("Enter birth year: ");
         scanf("%d", &birthYear);
-        // شرط السلسلة 1: الفردي يجب أن يكون 18+
         if (2026 - birthYear < 18) {
             printf("Error: Individual must be at least 18 years old.\n");
             return;

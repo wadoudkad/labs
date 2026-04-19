@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-// --- Data Structures ---
 typedef struct {
     int id;
     char name[30];
@@ -16,7 +15,6 @@ typedef struct {
 Account accounts[100];
 int accountCount = 0;
 
-// Helper function to find account index by ID
 int findIndex(int id) {
     for (int i = 0; i < accountCount; i++) {
         if (accounts[i].id == id) return i;
@@ -24,7 +22,6 @@ int findIndex(int id) {
     return -1;
 }
 
-// 1. Create (Add Account)
 void addAccount() {
     if (accountCount >= 100) {
         printf("\n[!] Error: Database is full!\n");
@@ -39,7 +36,6 @@ void addAccount() {
     printf("Enter Type (P: Personal, M: Minor, C: Commercial): "); 
     scanf(" %c", &a.type);
     
-    // Convert to uppercase for case-insensitivity
     a.type = toupper(a.type);
     
     a.balance = 0;
@@ -49,7 +45,6 @@ void addAccount() {
     printf("[+] Account created successfully!\n");
 }
 
-// 2. Search (Case-insensitive search by Name)
 void searchAccount() {
     char searchName[30];
     printf("\nEnter Name to search: "); 
@@ -57,7 +52,7 @@ void searchAccount() {
     bool found = false;
 
     for (int i = 0; i < accountCount; i++) {
-        // strcasecmp ignores upper/lower case differences
+
         if (strcasecmp(accounts[i].name, searchName) == 0) {
             printf("\nAccount Found:\n");
             printf("ID: %d | Name: %s | Type: %c | Balance: %d | Status: %s\n", 
@@ -68,14 +63,14 @@ void searchAccount() {
     }
     if (!found) printf("[!] Customer not found.\n");
 }
-// 4. Delete (Remove and Shift)
+
 void deleteAccount() {
     int id;
     printf("\nEnter Account ID to delete: "); 
     scanf("%d", &id);
     int idx = findIndex(id);
     if (idx != -1) {
-        // Shifting logic to maintain array continuity
+        
         for (int i = idx; i < accountCount - 1; i++) {
             accounts[i] = accounts[i+1];
         }
@@ -86,7 +81,6 @@ void deleteAccount() {
     }
 }
 
-// 5. Display (List all accounts)
 void displayAll() {
     if (accountCount == 0) {
         printf("\nDatabase is empty.\n");
@@ -100,7 +94,7 @@ void displayAll() {
     }
 }
 void saveToFile() {
-    FILE *file = fopen("accounts.txt", "w"); // فتح الملف للكتابة (سيمسح القديم ويكتب الجديد)
+    FILE *file = fopen("accounts.txt", "w"); 
     if (file == NULL) {
         printf("[!] Error opening file for saving.\n");
         return;
@@ -176,7 +170,7 @@ void transferMoney() {
     int toIdx = findIndex(toId);
 
     if (fromIdx != -1 && toIdx != -1) {
-        // التحقق من حالة الحسابات (لا يمكن التحويل من أو إلى حساب مجمد)
+        
         if (accounts[fromIdx].isBlocked || accounts[toIdx].isBlocked) {
             printf("[!] Transfer Failed: One of the accounts is blocked!\n");
             return;
@@ -184,10 +178,10 @@ void transferMoney() {
 
         printf("Enter amount to transfer: "); scanf("%d", &amount);
         
-        // التحقق من توفر الرصيد
+        
         if (amount > 0 && amount <= accounts[fromIdx].balance) {
-            accounts[fromIdx].balance -= amount; // خصم من المرسل
-            accounts[toIdx].balance += amount;   // إضافة للمستقبل
+            accounts[fromIdx].balance -= amount;
+            accounts[toIdx].balance += amount;  
             saveToFile();
             printf("[+] Success! %d transferred from ID %d to ID %d.\n", amount, fromId, toId);
         } else {
@@ -214,7 +208,7 @@ void updateAccount() {
             printf("Enter New Type: "); scanf(" %c", &accounts[idx].type);
             accounts[idx].type = toupper(accounts[idx].type);
         } else if (choice == 3) {
-            accounts[idx].isBlocked = !accounts[idx].isBlocked; // تعكس الحالة الحالية
+            accounts[idx].isBlocked = !accounts[idx].isBlocked; 
             printf("Status updated to: %s\n", accounts[idx].isBlocked ? "Blocked" : "Active");
         }
         saveToFile();
@@ -227,7 +221,7 @@ void accountInquiry() {
     int id;
     printf("\n--- Account Inquiry ---");
     printf("\nEnter Account ID: "); scanf("%d", &id);
-    int idx = findIndex(id); // نستخدم نفس دالة البحث التي كتبناها سابقاً
+    int idx = findIndex(id); 
 
     if (idx != -1) {
         printf("\n>>>> Account Details <<<<");
