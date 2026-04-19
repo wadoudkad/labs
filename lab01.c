@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// هيكل التاريخ
 typedef struct {
     int day, month, year;
 } Date;
