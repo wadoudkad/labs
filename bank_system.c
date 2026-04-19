@@ -27,7 +27,39 @@ int findIndex(int id) {
     }
     return -1;
 }
-
+void saveToFile() {
+    FILE *file = fopen("accounts.txt", "w"); 
+    if (file == NULL) {
+        printf("[!] Error opening file for saving.\n");
+        return;
+    }
+    for (int i = 0; i < accountCount; i++) {
+        fprintf(file, "%d %s %c %d %d\n", 
+                accounts[i].id, accounts[i].name, accounts[i].type, 
+                accounts[i].balance, accounts[i].isBlocked, 
+                accounts[i].dob.day, accounts[i].dob.month, accounts[i].dob.year);
+    }
+    fclose(file);
+}
+void loadFromFile() {
+    FILE *file = fopen("accounts.txt", "r");
+    if (file == NULL) {
+        printf("[!] No previous data found. Starting fresh.\n");
+        return;
+    }
+    while (fscanf(file, "%d %s %c %d %d %d %d %d", 
+                  &accounts[accountCount].id, 
+                  accounts[accountCount].name, 
+                  &accounts[accountCount].type, 
+                  &accounts[accountCount].balance, 
+                  (int *)&accounts[accountCount].isBlocked,
+                  &accounts[accountCount].dob.day,
+                  &accounts[accountCount].dob.month,
+                  &accounts[accountCount].dob.year) != EOF) {
+        accountCount++;
+    }
+    fclose(file);
+}
 void addAccount() {
     if (accountCount >= 100) {
         printf("\n[!] Error: Database is full!\n");
@@ -90,7 +122,6 @@ void searchAccount() {
     }
     if (!found) printf("[!] Customer not found.\n");
 }
-
 void deleteAccount() {
     int id;
     printf("\nEnter Account ID to delete: "); 
@@ -119,39 +150,6 @@ void displayAll() {
                 i+1, accounts[i].id, accounts[i].name, accounts[i].type, 
                 accounts[i].balance, accounts[i].isBlocked ? "Blocked" : "Active");
     }
-}
-void saveToFile() {
-    FILE *file = fopen("accounts.txt", "w"); 
-    if (file == NULL) {
-        printf("[!] Error opening file for saving.\n");
-        return;
-    }
-    for (int i = 0; i < accountCount; i++) {
-        fprintf(file, "%d %s %c %d %d\n", 
-                accounts[i].id, accounts[i].name, accounts[i].type, 
-                accounts[i].balance, accounts[i].isBlocked, 
-                accounts[i].dob.day, accounts[i].dob.month, accounts[i].dob.year);
-    }
-    fclose(file);
-}
-void loadFromFile() {
-    FILE *file = fopen("accounts.txt", "r");
-    if (file == NULL) {
-        printf("[!] No previous data found. Starting fresh.\n");
-        return;
-    }
-    while (fscanf(file, "%d %s %c %d %d %d %d %d", 
-                  &accounts[accountCount].id, 
-                  accounts[accountCount].name, 
-                  &accounts[accountCount].type, 
-                  &accounts[accountCount].balance, 
-                  (int *)&accounts[accountCount].isBlocked,
-                  &accounts[accountCount].dob.day,
-                  &accounts[accountCount].dob.month,
-                  &accounts[accountCount].dob.year) != EOF) {
-        accountCount++;
-    }
-    fclose(file);
 }
 void deposit() {
     int id, amount;
